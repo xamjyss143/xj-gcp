@@ -1,13 +1,15 @@
 #!/bin/sh
-set -e
+set -eu
 
 NGINX_CONF="/etc/nginx/nginx.conf"
 API_URL="https://vpnhub.cloud/xjvpn/api/server/register-gcp"
 
-if [ -z "$GCP_HOST" ]; then
+if [ -z "${GCP_HOST:-}" ]; then
   echo "ERROR: GCP_HOST is not set"
   exit 1
 fi
+
+echo "Using GCP_HOST=$GCP_HOST"
 
 awk '
 /location \/[a-z0-9]+ \{/ {
@@ -24,9 +26,9 @@ awk '
     code=$(echo "$gcp_path" | sed 's#^/##')
     gcp_xray_path="/vmess_${code}"
 
-    echo "Registering $ip -> $gcp_path -> $gcp_xray_path with host=$GCP_HOST"
+    echo "Registering $ip -> $gcp_path -> $gcp_xray_path"
 
-    curl -X POST "$API_URL" \
+    curl -sS -X POST "$API_URL" \
       -H "Content-Type: application/json" \
       -H "Accept: application/json" \
       -d "{
