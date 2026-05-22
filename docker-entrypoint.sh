@@ -24,7 +24,7 @@ awk '
 }
 ' "$NGINX_CONF" | while IFS="|" read -r gcp_path ip; do
     code=$(echo "$gcp_path" | sed 's#^/##')
-    gcp_xray_path="/vmess_${code}"
+    gcp_xray_path="/vless_${code}"
 
     echo "Registering $ip -> $gcp_path -> $gcp_xray_path"
 
