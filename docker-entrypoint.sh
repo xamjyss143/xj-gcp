@@ -25,8 +25,10 @@ awk '
 ' "$NGINX_CONF" | while IFS="|" read -r gcp_path ip; do
     code=$(echo "$gcp_path" | sed 's#^/##')
     gcp_xray_path="/vless_${code}"
+    gcp_vmess_path="/vmess_${code}"
+    gcp_trojan_path="/trojan_${code}"
 
-    echo "Registering $ip -> $gcp_path -> $gcp_xray_path"
+    echo "Registering $ip -> $gcp_path -> $gcp_xray_path -> $gcp_vmess_path -> $gcp_trojan_path"
 
     curl -sS -X POST "$API_URL" \
       -H "Content-Type: application/json" \
@@ -35,7 +37,9 @@ awk '
         \"ip\": \"$ip\",
         \"gcp_host\": \"$GCP_HOST\",
         \"gcp_path\": \"$gcp_path\",
-        \"gcp_xray_path\": \"$gcp_xray_path\"
+        \"gcp_xray_path\": \"$gcp_xray_path\",
+        \"gcp_vmess_path\": \"$gcp_vmess_path\",
+        \"gcp_trojan_path\": \"$gcp_trojan_path\"
       }"
 
     echo ""
