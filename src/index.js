@@ -1,4 +1,4 @@
-import { Container } from "@cloudflare/containers";
+import { Container, getContainer } from "@cloudflare/containers";
 
 export class AppContainer extends Container {
   defaultPort = 8080;
@@ -7,6 +7,17 @@ export class AppContainer extends Container {
 
 export default {
   async fetch(request, env) {
-    return env.APP_CONTAINER.getByName("main").fetch(request);
+    const container = getContainer(env.APP_CONTAINER, "main");
+
+    await container.startAndWaitForPorts({
+      ports: [8080],
+      startOptions: {
+        envVars: {
+          GCP_HOST: env.GCP_HOST
+        }
+      }
+    });
+
+    return container.fetch(request);
   }
 };
