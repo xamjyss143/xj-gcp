@@ -23,26 +23,21 @@ register_servers() {
       print path "|" parts[1]
   }
   ' "$NGINX_CONF" | while IFS="|" read -r gcp_path ip; do
-      code=$(echo "$gcp_path" | sed 's#^/##')
-      gcp_xray_path="/vless_${code}"
-      gcp_vmess_path="/vmess_${code}"
-      gcp_trojan_path="/trojan-ws_${code}"
+    code=$(echo "$gcp_path" | sed 's#^/##')
 
-      echo "Registering $ip -> $gcp_path"
+    echo "Registering $ip -> $gcp_path"
 
-      curl -sS --connect-timeout 5 --max-time 15 -X POST "$API_URL" \
-        -H "Content-Type: application/json" \
-        -H "Accept: application/json" \
-        -d "{
-          \"ip\": \"$ip\",
-          \"gcp_host\": \"$GCP_HOST\",
-          \"gcp_path\": \"$gcp_path\",
-          \"gcp_xray_path\": \"$gcp_xray_path\",
-          \"gcp_vmess_path\": \"$gcp_vmess_path\",
-          \"gcp_trojan_path\": \"$gcp_trojan_path\"
-        }" || echo "WARNING: registration failed for $ip"
-
-      echo ""
+    curl -sS --connect-timeout 5 --max-time 15 -X POST "$API_URL" \
+      -H "Content-Type: application/json" \
+      -H "Accept: application/json" \
+      -d "{
+        \"ip\": \"$ip\",
+        \"gcp_host\": \"$GCP_HOST\",
+        \"gcp_path\": \"$gcp_path\",
+        \"gcp_xray_path\": \"/vless_${code}\",
+        \"gcp_vmess_path\": \"/vmess_${code}\",
+        \"gcp_trojan_path\": \"/trojan-ws_${code}\"
+      }" || echo "WARNING: registration failed for $ip"
   done
 }
 
