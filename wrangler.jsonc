@@ -1,5 +1,5 @@
 {
-  "name": "my-container-app",
+  "name": "xj-gcp",
   "main": "src/index.js",
   "compatibility_date": "2026-06-01",
   "containers": [
