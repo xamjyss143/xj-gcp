@@ -1,0 +1,26 @@
+{
+  "name": "my-container-app",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+  "containers": [
+    {
+      "class_name": "AppContainer",
+      "image": "./Dockerfile",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "APP_CONTAINER",
+        "class_name": "AppContainer"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["AppContainer"]
+    }
+  ]
+}
